@@ -1,0 +1,42 @@
+services:
+  # Servicio de Next.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://mvega:Martin12.@db:5432/finanzas_db
+      - NODE_ENV=development
+    depends_on:
+      - db
+
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=mvega
+      - POSTGRES_PASSWORD=Martin12.
+      - POSTGRES_DB=finanzas_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # pgAdmin para administración de base de datos
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
